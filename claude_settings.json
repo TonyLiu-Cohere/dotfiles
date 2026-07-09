@@ -8,8 +8,7 @@
       "Write(*)",
       "WebFetch(*)",
       "WebSearch(*)",
-      "NotebookEdit(*)",
-      "mcp__*"
+      "NotebookEdit(*)"
     ]
   }
 }
