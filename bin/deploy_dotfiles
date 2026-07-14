@@ -12,29 +12,36 @@ if command -v claude &>/dev/null; then
     cp "$HOME/dotfiles/claude_settings.json" "$HOME/.claude/settings.json"
 fi
 
-# Shared agent rules + goal skill, linked into every agent so they stay in sync
+# Shared agent rules + skills, linked into every agent so they stay in sync
 AGENTS_SRC="$HOME/dotfiles/AGENTS.md"
-GOAL_SRC="$HOME/dotfiles/skills/exec-goal"
+SKILLS_SRC="$HOME/dotfiles/skills"
 
-# Claude Code: global memory + skill
+# Symlink every skill dir under $SKILLS_SRC into the given target skills dir
+link_skills() {
+    mkdir -p "$1"
+    for skill in "$SKILLS_SRC"/*/; do
+        [ -d "$skill" ] || continue
+        ln -sfn "${skill%/}" "$1/$(basename "$skill")"
+    done
+}
+
+# Claude Code: global memory + skills
 if command -v claude &>/dev/null; then
     ln -sfn "$AGENTS_SRC" "$HOME/.claude/CLAUDE.md"
-    mkdir -p "$HOME/.claude/skills"
-    ln -sfn "$GOAL_SRC" "$HOME/.claude/skills/exec-goal"
+    link_skills "$HOME/.claude/skills"
 fi
 
-# Codex: global AGENTS.md + skill
+# Codex: global AGENTS.md + skills
 if command -v codex &>/dev/null; then
-    mkdir -p "$HOME/.codex/skills"
+    link_skills "$HOME/.codex/skills"
     ln -sfn "$AGENTS_SRC" "$HOME/.codex/AGENTS.md"
-    ln -sfn "$GOAL_SRC" "$HOME/.codex/skills/exec-goal"
 fi
 
 # Cursor: per-project AGENTS.md is the reliable path; ~/.cursor/AGENTS.md is best-effort
 if [ -d "$HOME/.cursor" ]; then
     ln -sfn "$AGENTS_SRC" "$HOME/.cursor/AGENTS.md"
     if [ -d "$HOME/.cursor/skills-cursor" ]; then
-        ln -sfn "$GOAL_SRC" "$HOME/.cursor/skills-cursor/exec-goal"
+        link_skills "$HOME/.cursor/skills-cursor"
     fi
 fi
 
