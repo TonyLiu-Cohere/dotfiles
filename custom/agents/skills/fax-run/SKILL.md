@@ -1,13 +1,14 @@
 ---
 name: fax-run
-description: Plans, validates, and summarizes fax/tax pretraining, SFT, and RLVR runs without launching them. Use only inside a fax/tax repository or when the user explicitly identifies the work as fax/tax training; do not apply to other projects or generic training workflows.
+description: Plans, validates, summarizes, and explicitly launches fax/tax pretraining, SFT, and RLVR runs. Use only inside a fax/tax repository or when the user explicitly identifies the work as fax/tax training; do not apply to other projects or generic training workflows.
 ---
 
 # Fax Run Planning
 
-Never start, submit, or debug a run. Do not execute `make debug`, `make submit`,
-or `workspace uv run ... --submit start`. Inspect the repository and give the
-user the exact command to run themselves.
+Do not start or submit a run by default. Inspect the repository and give the
+user the exact command to run themselves. If the user explicitly asks the agent
+to start or submit the run, the agent may execute `make debug`, `make submit`,
+or `workspace uv run ... --submit start` as appropriate.
 
 ## Before proposing a command
 
